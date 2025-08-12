@@ -5,7 +5,9 @@ dir_shell=/ql/shell
 . $dir_shell/env.sh
 
 echo -e "======================写入rclone配置========================\n"
-echo "$RCLONE_CONF" > ~/.config/rclone/rclone.conf
+if ! [[ -f ~/.config/rclone/rclone.conf ]]; then
+  echo "$RCLONE_CONF" > ~/.config/rclone/rclone.conf
+fi
 
 echo -e "======================1. 检测配置文件========================\n"
 import_config "$@"
@@ -76,7 +78,7 @@ init_auth_info() {
 
 init_auth_info "\"username\": \"$ADMIN_USERNAME\", \"password\": \"$ADMIN_PASSWORD\"" "Change Password"
 
-if [ -n "$RCLONE_CONF" ]; then
+if [[ -n "$RCLONE_CONF" || -f ~/.config/rclone/rclone.conf ]]; then
   echo -e "##########同步备份############"
   # 指定远程文件夹路径，格式为 remote:path
   REMOTE_FOLDER="huggingface:/qinglong"
